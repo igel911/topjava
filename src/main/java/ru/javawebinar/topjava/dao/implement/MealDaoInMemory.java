@@ -17,15 +17,28 @@ public class MealDaoInMemory implements MealDao {
 
     private static Map<Integer, Meal> mealsMap = new ConcurrentHashMap<>();
     static {
-        mealsMap.put(atomInt.incrementAndGet(), new Meal(atomInt.get(), LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500));
-        mealsMap.put(atomInt.incrementAndGet(), new Meal(atomInt.get(), LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000));
-        mealsMap.put(atomInt.incrementAndGet(), new Meal(atomInt.get(), LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500));
-        mealsMap.put(atomInt.incrementAndGet(), new Meal(atomInt.get(), LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000));
-        mealsMap.put(atomInt.incrementAndGet(), new Meal(atomInt.get(), LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500));
-        mealsMap.put(atomInt.incrementAndGet(), new Meal(atomInt.get(), LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510));
+        Meal meal = new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
+        meal.setId(atomInt.incrementAndGet());
+        mealsMap.put(atomInt.get(), meal);
+        meal = new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
+        meal.setId(atomInt.incrementAndGet());
+        mealsMap.put(atomInt.get(), meal);
+        meal = new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500);
+        meal.setId(atomInt.incrementAndGet());
+        mealsMap.put(atomInt.get(), meal);
+        meal = new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000);
+        meal.setId(atomInt.incrementAndGet());
+        mealsMap.put(atomInt.get(), meal);
+        meal = new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500);
+        meal.setId(atomInt.incrementAndGet());
+        mealsMap.put(atomInt.get(), meal);
+        meal = new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510);
+        meal.setId(atomInt.incrementAndGet());
+        mealsMap.put(atomInt.get(), meal);
     }
 
     public void add(Meal meal) {
+        meal.setId(atomInt.incrementAndGet());
         update(meal);
     }
 
@@ -33,8 +46,8 @@ public class MealDaoInMemory implements MealDao {
         mealsMap.put(meal.getId(), meal);
     }
 
-    public void delete(Meal meal) {
-        mealsMap.remove(meal.getId());
+    public void delete(int id) {
+        mealsMap.remove(id);
     }
 
     public List<Meal> getAll() {
@@ -49,7 +62,4 @@ public class MealDaoInMemory implements MealDao {
         return mealsMap;
     }
 
-    public int getNewId() {
-        return atomInt.incrementAndGet();
-    }
 }

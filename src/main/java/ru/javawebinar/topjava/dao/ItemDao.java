@@ -8,9 +8,9 @@ public interface ItemDao<T> {
 
     List<T> getAll();
 
-    void add(T model);
+    void add(T item);
 
-    void update(T model);
+    void update(T item);
 
-    void delete(T model);
+    void delete(int id);
 }
