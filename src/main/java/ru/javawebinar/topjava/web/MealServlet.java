@@ -47,17 +47,15 @@ public class MealServlet extends HttpServlet {
             log.debug("forward to meals_list.jsp from doGet");
             request.getRequestDispatcher(MEALS_LIST).forward(request, response);
         } else {
-            if (action.equalsIgnoreCase("delete")){
-                mealDao.delete(Integer.parseInt(request.getParameter("mealId")));
-                log.debug("redirect to \"/meals\" from doGet");
-                response.sendRedirect(REDIRECT);
-            } else {
-                if (action.equalsIgnoreCase("update")){
-                    Meal meal = mealDao.getById(Integer.parseInt(request.getParameter("mealId")));
-                    request.setAttribute("meal", meal);
-                }
-                log.debug("forward to meal.jsp from doGet");
-                request.getRequestDispatcher(ADD_OR_UPDATE).forward(request, response);
+            switch (action.toLowerCase()) {
+                case "delete": mealDao.delete(Integer.parseInt(request.getParameter("mealId")));
+                                log.debug("redirect to \"/meals\" from doGet");
+                                response.sendRedirect(REDIRECT); break;
+                case "update": Meal meal = mealDao.getById(Integer.parseInt(request.getParameter("mealId")));
+                                request.setAttribute("meal", meal);
+                case "add":    log.debug("forward to meal.jsp from doGet");
+                                request.getRequestDispatcher(ADD_OR_UPDATE).forward(request, response); break;
+                default: break;
             }
         }
     }
