@@ -1,6 +1,6 @@
 package ru.javawebinar.topjava.dao.implement;
 
-import ru.javawebinar.topjava.dao.MealDao;
+import ru.javawebinar.topjava.dao.ItemDao;
 import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MealDaoInMemory implements MealDao {
+public class MealDaoInMemory implements ItemDao<Meal> {
 
     private static AtomicInteger atomInt = new AtomicInteger();
 
