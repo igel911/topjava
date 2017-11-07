@@ -14,7 +14,6 @@
 <p><a href="meals?action=add">Add Meal</a></p>
 <table border="1" cellspacing=5 cellpadding=5>
     <tr>
-        <th>ID</th>
         <th>DATE</th>
         <th>DESCRIPTION</th>
         <th>CALORIES</th>
@@ -24,7 +23,6 @@
     <jsp:useBean id="formatter" scope="request" type="java.time.format.DateTimeFormatter"/>
     <c:forEach items="${mealsWithExceed}" var="meal">
         <tr class="${meal.exceed ? "redtext" : "greentext"}">
-            <td>${meal.id}</td>
             <td>${meal.dateTime.format(formatter)}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
