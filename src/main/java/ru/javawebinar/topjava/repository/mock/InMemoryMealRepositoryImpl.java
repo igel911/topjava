@@ -39,23 +39,31 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public void delete(int userId, int mealId) {
         List<Meal> userMeals = repository.get(userId);
-        userMeals.remove(get(userId, mealId));
+        if (Objects.nonNull(userMeals))
+            userMeals.remove(get(userId, mealId));
     }
 
     @Override
     public Meal get(int userId, int mealId) {
         List<Meal> userMeals = repository.get(userId);
-        return userMeals.stream()
-                .filter(meal -> meal.getId() == (mealId))
-                .findFirst()
-                .orElse(null);
+        Meal meal = null;
+        if (Objects.nonNull(userMeals)) {
+            meal = userMeals.stream()
+                    .filter(m -> m.getId() == (mealId))
+                    .findFirst()
+                    .orElse(null);
+        }
+         return meal;
     }
 
     @Override
     public Collection<Meal> getAll(int userId) {
         List<Meal> userMeals = repository.get(userId);
-        userMeals.sort(Comparator.comparing(Meal::getDateTime).reversed());
-        return userMeals;
+        if (Objects.nonNull(userMeals)) {
+            userMeals.sort(Comparator.comparing(Meal::getDateTime).reversed());
+            return userMeals;
+        }
+        return Collections.EMPTY_LIST;
     }
 }
 
