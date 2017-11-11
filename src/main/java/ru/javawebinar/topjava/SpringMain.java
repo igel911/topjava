@@ -2,11 +2,14 @@ package ru.javawebinar.topjava;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 public class SpringMain {
     public static void main(String[] args) {
@@ -15,6 +18,12 @@ public class SpringMain {
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
             adminUserController.create(new User(null, "userName", "email", "password", Role.ROLE_ADMIN));
+
+            MealRestController mealController = appCtx.getBean(MealRestController.class);
+            Collection<Meal> meals = mealController.getAll(3);
+            meals.forEach(System.out::println);
+            Meal meal = mealController.get(3, 18);
+            System.out.println(meal);
         }
     }
 }
