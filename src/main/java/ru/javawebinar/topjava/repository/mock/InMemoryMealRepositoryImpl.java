@@ -11,10 +11,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
-    private Map<Integer, List<Meal>> repository = new ConcurrentHashMap<>();
+    private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
@@ -27,43 +28,40 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     public Meal save(int userId, Meal meal) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-        } else {
-            delete(userId, meal.getId());
+            meal.setUserId(userId);
         }
-        List<Meal> userMeals = repository.getOrDefault(userId, new ArrayList<>());
-        userMeals.add(meal);
-        repository.putIfAbsent(userId, userMeals);
+        if (meal.getUserId() != userId){
+            return null;
+        }
+        repository.put(meal.getId(), meal);
         return meal;
     }
 
     @Override
-    public void delete(int userId, int mealId) {
-        List<Meal> userMeals = repository.get(userId);
-        if (Objects.nonNull(userMeals))
-            userMeals.remove(get(userId, mealId));
+    public boolean delete(int userId, int mealId) {
+        Meal meal = get(userId, mealId);
+        if (Objects.nonNull(meal)) {
+           repository.remove(mealId);
+           return true;
+        }
+        return false;
     }
 
     @Override
     public Meal get(int userId, int mealId) {
-        List<Meal> userMeals = repository.get(userId);
-        Meal meal = null;
-        if (Objects.nonNull(userMeals)) {
-            meal = userMeals.stream()
-                    .filter(m -> m.getId() == (mealId))
-                    .findFirst()
-                    .orElse(null);
+        Meal meal = repository.get(mealId);
+        if (Objects.nonNull(meal) && userId == meal.getUserId()) {
+            return meal;
         }
-         return meal;
+         return null;
     }
 
     @Override
     public Collection<Meal> getAll(int userId) {
-        List<Meal> userMeals = repository.get(userId);
-        if (Objects.nonNull(userMeals)) {
-            userMeals.sort(Comparator.comparing(Meal::getDateTime).reversed());
-            return userMeals;
-        }
-        return Collections.EMPTY_LIST;
+        return repository.values().stream()
+                .filter(meal -> meal.getUserId() == userId)
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
     }
 }
 

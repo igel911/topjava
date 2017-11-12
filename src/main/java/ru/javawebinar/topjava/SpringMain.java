@@ -20,9 +20,10 @@ public class SpringMain {
             adminUserController.create(new User(null, "userName", "email", "password", Role.ROLE_ADMIN));
 
             MealRestController mealController = appCtx.getBean(MealRestController.class);
-            Collection<Meal> meals = mealController.getAll(3);
+            int userId = AuthorizedUser.id();
+            Collection<Meal> meals = mealController.getAll(userId);
             meals.forEach(System.out::println);
-            Meal meal = mealController.get(3, 18);
+            Meal meal = mealController.get(userId, 1);
             System.out.println(meal);
         }
     }
