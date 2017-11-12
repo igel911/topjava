@@ -8,8 +8,11 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class SpringMain {
     public static void main(String[] args) {
@@ -20,10 +23,10 @@ public class SpringMain {
             adminUserController.create(new User(null, "userName", "email", "password", Role.ROLE_ADMIN));
 
             MealRestController mealController = appCtx.getBean(MealRestController.class);
-            int userId = AuthorizedUser.id();
-            Collection<Meal> meals = mealController.getAll(userId);
+            //Collection<Meal> meals = mealController.getAll();
+            Collection<Meal> meals = mealController.getFiltered(LocalDate.of(2015, Month.MAY, 30), LocalDate.of(2015, Month.MAY, 31));
             meals.forEach(System.out::println);
-            Meal meal = mealController.get(userId, 1);
+            Meal meal = mealController.get(1);
             System.out.println(meal);
         }
     }
