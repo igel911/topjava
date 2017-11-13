@@ -9,15 +9,15 @@ import java.util.Objects;
 public class DateTimeUtil {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public static boolean isBetween(LocalTime lt, LocalTime startTime, LocalTime endTime) {
+    public static boolean isBetweenTimes(LocalTime lt, LocalTime startTime, LocalTime endTime) {
         return lt.compareTo(startTime) >= 0 && lt.compareTo(endTime) <= 0;
     }
 
-    public static boolean isBetweenDate(LocalDate ld, LocalDate startDate, LocalDate endDate) {
+    public static boolean isBetweenDates(LocalDate ld, LocalDate startDate, LocalDate endDate) {
         return ld.compareTo(startDate) >= 0 && ld.compareTo(endDate) <= 0;
     }
 
-//    public static <T> boolean isBetween(T ld, T startDate, T endDate) {
+//    public static <T extends LocalDate & LocalTime> boolean isBetweenTimes(T ld, T startDate, T endDate) {
 //        return ld.compareTo(startDate) >= 0 && ld.compareTo(endDate) <= 0;
 //    }
 

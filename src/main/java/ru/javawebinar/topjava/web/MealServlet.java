@@ -2,8 +2,12 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.web.meal.MealRestController;
+import ru.javawebinar.topjava.web.user.ProfileRestController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,11 +23,22 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private MealRestController controller;
+    private ProfileRestController prc;
+
+    private ConfigurableApplicationContext appCtx;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        controller = new MealRestController();
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        controller = appCtx.getBean(MealRestController.class);
+        prc = appCtx.getBean(ProfileRestController.class);
+    }
+
+    @Override
+    public void destroy() {
+        appCtx.close();
+        super.destroy();
     }
 
     @Override
@@ -65,8 +80,15 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals", controller.getWithExceeded());
+                String selectedUser = request.getParameter("selectUser");
+                if (Objects.nonNull(selectedUser)) AuthorizedUser.setId(Integer.parseInt(selectedUser));
+                String dateFrom = request.getParameter("dateFrom");
+                String dateTo = request.getParameter("dateTo");
+                String timeFrom = request.getParameter("timeFrom");
+                String timeTo = request.getParameter("timeTo");
+                request.setAttribute("meals", controller.getFilteredWithExceeded(dateFrom, dateTo, timeFrom, timeTo));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                System.out.println(prc.get());
                 break;
         }
     }

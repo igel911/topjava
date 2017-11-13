@@ -4,11 +4,22 @@
     <title>Java Enterprise (Topjava)</title>
 </head>
 <body>
-<h3>Проект <a href="https://github.com/JavaWebinar/topjava" target="_blank">Java Enterprise (Topjava)</a></h3>
-<hr>
-<ul>
-    <li><a href="users">Users</a></li>
-    <li><a href="meals">Meals</a></li>
-</ul>
+    <h3>Проект <a href="https://github.com/JavaWebinar/topjava" target="_blank">Java Enterprise (Topjava)</a></h3>
+    <hr>
+    <ul>
+        <li><a href="users">Users</a></li>
+        <li>
+            <form action="meals" method="get">
+                <a href="" onClick="this.parentNode.submit(); return false;">Meals</a>
+                <br>
+                <select name="selectUser">
+                    <option value="1" selected>Admin</option>
+                    <option value="2">User</option>
+                </select>
+            </form>
+            <!--<a href="meals">Meals</a>-->
+        </li>
+    </ul>
+
 </body>
 </html>

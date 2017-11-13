@@ -8,11 +8,15 @@ import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.*;
 
@@ -23,8 +27,20 @@ public class MealRestController {
     @Autowired
     private MealService service;
 
+    public List<MealWithExceed> getFilteredWithExceeded(String dateFrom, String dateTo,
+                                                        String timeFrom, String timeTo) {
+        LocalDate startDate = Objects.isNull(dateFrom) ? LocalDate.MIN : LocalDate.parse(dateFrom);
+        LocalDate endDate = Objects.isNull(dateTo) ? LocalDate.MAX : LocalDate.parse(dateTo);
+        LocalTime startTime = Objects.isNull(timeFrom) ? LocalTime.MIN : LocalTime.parse(timeFrom);
+        LocalTime endTime = Objects.isNull(timeTo) ? LocalTime.MAX : LocalTime.parse(timeTo);
+        return getWithExceeded().stream()
+                .filter(meal -> DateTimeUtil.isBetweenDates(meal.getDateTime().toLocalDate(), startDate, endDate))
+                .filter(meal -> DateTimeUtil.isBetweenTimes(meal.getDateTime().toLocalTime(), startTime, endTime))
+                .collect(Collectors.toList());
+    }
+
     public List<MealWithExceed> getWithExceeded() {
-        return MealsUtil.getWithExceeded(getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+        return MealsUtil.getWithExceeded(getAll(), AuthorizedUser.getCaloriesPerDay());
     }
 
     public Collection<Meal> getAll() {

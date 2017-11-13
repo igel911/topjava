@@ -19,7 +19,6 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        save(new User(null, "Grigory", "grigory@mail.com", "qwerty", Role.ROLE_USER, Role.ROLE_ADMIN));
         save(new User(null, "Tanya", "tanya@mail.com", "12345", Role.ROLE_USER, Role.ROLE_ADMIN));
         save(new User(null, "Vladimir", "vladimir@mail.com", "password", Role.ROLE_USER));
     }
