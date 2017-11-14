@@ -23,16 +23,17 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     {
         new InMemoryUserRepositoryImpl().getAll().forEach(
                 user -> new MealsUtil().MEALS.forEach(
-                        meal -> save(user.getId(), meal)));
+                        meal -> {
+                            meal.setUserId(user.getId());
+                            save(user.getId(), meal);
+                        }));
     }
 
     @Override
     public Meal save(int userId, Meal meal) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            meal.setUserId(userId);
-        }
-        if (meal.getUserId() != userId){
+        } else if (Objects.isNull(get(userId, meal.getId()))){
             return null;
         }
         repository.put(meal.getId(), meal);
@@ -41,12 +42,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public boolean delete(int userId, int mealId) {
-        Meal meal = get(userId, mealId);
-        if (Objects.nonNull(meal)) {
-           repository.remove(mealId);
-           return true;
-        }
-        return false;
+        return Objects.nonNull(get(userId, mealId)) && Objects.nonNull(repository.remove(mealId));
     }
 
     @Override

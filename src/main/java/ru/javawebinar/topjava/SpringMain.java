@@ -22,12 +22,6 @@ public class SpringMain {
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
             adminUserController.create(new User(null, "userName", "email", "password", Role.ROLE_ADMIN));
 
-            MealRestController mealController = appCtx.getBean(MealRestController.class);
-            //Collection<Meal> meals = mealController.getAll();
-            Collection<Meal> meals = mealController.getFiltered(LocalDate.of(2015, Month.MAY, 30), LocalDate.of(2015, Month.MAY, 31));
-            meals.forEach(System.out::println);
-            Meal meal = mealController.get(1);
-            System.out.println(meal);
         }
     }
 }

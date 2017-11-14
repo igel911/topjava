@@ -4,16 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.web.meal.MealRestController;
-import ru.javawebinar.topjava.web.user.ProfileRestController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -23,7 +22,6 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private MealRestController controller;
-    private ProfileRestController prc;
 
     private ConfigurableApplicationContext appCtx;
 
@@ -32,7 +30,6 @@ public class MealServlet extends HttpServlet {
         super.init(config);
         appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         controller = appCtx.getBean(MealRestController.class);
-        prc = appCtx.getBean(ProfileRestController.class);
     }
 
     @Override
@@ -80,15 +77,9 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                String selectedUser = request.getParameter("selectUser");
-                if (Objects.nonNull(selectedUser)) AuthorizedUser.setId(Integer.parseInt(selectedUser));
-                String dateFrom = request.getParameter("dateFrom");
-                String dateTo = request.getParameter("dateTo");
-                String timeFrom = request.getParameter("timeFrom");
-                String timeTo = request.getParameter("timeTo");
-                request.setAttribute("meals", controller.getFilteredWithExceeded(dateFrom, dateTo, timeFrom, timeTo));
+                String filter = request.getParameter("btn");
+                doFilter(request, filter);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
-                System.out.println(prc.get());
                 break;
         }
     }
@@ -96,5 +87,30 @@ public class MealServlet extends HttpServlet {
     private int getMealId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.valueOf(paramId);
+    }
+
+    private void doFilter(HttpServletRequest request, String filter) {
+        HttpSession session = request.getSession();
+        String dateFrom = "";
+        String dateTo = "";
+        String timeFrom = "";
+        String timeTo = "";
+        if (filter != null) {
+            if (filter.equals("filter")) {
+                dateFrom = request.getParameter("dateFrom");
+                dateTo = request.getParameter("dateTo");
+                timeFrom = request.getParameter("timeFrom");
+                timeTo = request.getParameter("timeTo");
+            }
+            session.setAttribute("dateFrom", dateFrom);
+            session.setAttribute("dateTo", dateTo);
+            session.setAttribute("timeFrom", timeFrom);
+            session.setAttribute("timeTo", timeTo);
+        }
+        request.setAttribute("meals", controller.getFilteredWithExceeded(
+                (String) session.getAttribute("dateFrom"),
+                (String) session.getAttribute("dateTo"),
+                (String) session.getAttribute("timeFrom"),
+                (String) session.getAttribute("timeTo")));
     }
 }

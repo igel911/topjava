@@ -22,14 +22,14 @@
     <h2>Meals</h2>
     <hr/>
     <form method="get" action="meals">
-        От даты: <input type="date" value="" name="dateFrom">
-        До даты: <input type="date" value="" name="dateTo">
+        От даты: <input type="date" name="dateFrom" value="${sessionScope.dateFrom}">
+        До даты: <input type="date" name="dateTo" value="${sessionScope.dateTo}">
         <br>
-        От времени: <input type="time" value="" name="timeFrom">
-        До времени: <input type="time" value="" name="timeTo">
+        От времени: <input type="time" name="timeFrom" value="${sessionScope.timeFrom}">
+        До времени: <input type="time" name="timeTo" value="${sessionScope.timeTo}">
         <br>
-        <button type="submit" name="filter">Do filter</button>
-        <button type="submit" name="clear">Clear</button>
+        <button type="submit" name="btn" value="filter">Do filter</button>
+        <button type="submit" name="btn" value="clear">Clear</button>
     </form>
     <a href="meals?action=create">Add Meal</a>
     <table border="1" cellpadding="8" cellspacing="0">
