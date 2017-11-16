@@ -26,15 +26,14 @@ public class MealRestController {
     private MealService service;
 
     public List<MealWithExceed> getFilteredWithExceeded(String dateFrom, String dateTo, String timeFrom, String timeTo) {
-        LocalDate startDate = (Objects.isNull(dateFrom) || dateFrom.isEmpty()) ? LocalDate.MIN : LocalDate.parse(dateFrom);
-        LocalDate endDate = (Objects.isNull(dateTo) || dateTo.isEmpty()) ? LocalDate.MAX : LocalDate.parse(dateTo);
-        LocalTime startTime = (Objects.isNull(timeFrom) || timeFrom.isEmpty()) ? LocalTime.MIN : LocalTime.parse(timeFrom);
-        LocalTime endTime = (Objects.isNull(timeTo) || timeTo.isEmpty()) ? LocalTime.MAX : LocalTime.parse(timeTo);
-        return MealsUtil.getFilteredWithExceeded(service.getFiltered(AuthorizedUser.id(), startDate, endDate),
-                startTime, endTime, AuthorizedUser.getCaloriesPerDay());
+        log.info("get filtered meals. Dates from {} to {}. Times from {} to {}", dateFrom, dateTo, timeFrom, timeTo);
+        return MealsUtil.getFilteredWithExceeded(service.getFiltered(
+                AuthorizedUser.id(), getDate(dateFrom, false), getDate(dateTo, true)),
+                getTime(timeFrom, false), getTime(timeTo, true), AuthorizedUser.getCaloriesPerDay());
     }
 
     public List<MealWithExceed> getWithExceeded() {
+        log.info("get all meals");
         return getFilteredWithExceeded(null, null, null, null);
     }
 
@@ -64,5 +63,13 @@ public class MealRestController {
         assureIdConsistent(meal, mealId);
         meal.setUserId(userId);
         service.update(userId, meal);
+    }
+
+    private LocalTime getTime(String time, boolean max) {
+        return (Objects.isNull(time) || time.isEmpty()) ? (max ? LocalTime.MAX : LocalTime.MIN) : LocalTime.parse(time);
+    }
+
+    private LocalDate getDate(String date, boolean max) {
+        return (Objects.isNull(date) || date.isEmpty()) ? (max ? LocalDate.MAX : LocalDate.MIN) : LocalDate.parse(date);
     }
 }

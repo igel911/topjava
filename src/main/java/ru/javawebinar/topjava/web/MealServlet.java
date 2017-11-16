@@ -77,8 +77,8 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                String filter = request.getParameter("btn");
-                doFilter(request, filter);
+                String btnValue = request.getParameter("btn");
+                doFilter(request, btnValue);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
@@ -89,23 +89,13 @@ public class MealServlet extends HttpServlet {
         return Integer.valueOf(paramId);
     }
 
-    private void doFilter(HttpServletRequest request, String filter) {
+    private void doFilter(HttpServletRequest request, String btnValue) {
         HttpSession session = request.getSession();
-        String dateFrom = "";
-        String dateTo = "";
-        String timeFrom = "";
-        String timeTo = "";
-        if (filter != null) {
-            if (filter.equals("filter")) {
-                dateFrom = request.getParameter("dateFrom");
-                dateTo = request.getParameter("dateTo");
-                timeFrom = request.getParameter("timeFrom");
-                timeTo = request.getParameter("timeTo");
-            }
-            session.setAttribute("dateFrom", dateFrom);
-            session.setAttribute("dateTo", dateTo);
-            session.setAttribute("timeFrom", timeFrom);
-            session.setAttribute("timeTo", timeTo);
+        if (btnValue != null) {
+            session.setAttribute("dateFrom", btnValue.equals("filter") ? request.getParameter("dateFrom") : "");
+            session.setAttribute("dateTo", btnValue.equals("filter") ? request.getParameter("dateTo") : "");
+            session.setAttribute("timeFrom", btnValue.equals("filter") ? request.getParameter("timeFrom") : "");
+            session.setAttribute("timeTo", btnValue.equals("filter") ? request.getParameter("timeTo") : "");
         }
         request.setAttribute("meals", controller.getFilteredWithExceeded(
                 (String) session.getAttribute("dateFrom"),
