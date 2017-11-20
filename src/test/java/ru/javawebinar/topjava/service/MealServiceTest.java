@@ -34,8 +34,8 @@ public class MealServiceTest {
 
     @Test
     public void get() throws Exception {
-        Meal meal = service.get(USERS_MEAL_ID, USER_ID);
-        assertMatch(meal, meal1);
+        Meal meal = service.get(USERS_MEAL_1_ID, USER_ID);
+        assertMatch(meal, MEAL_1);
     }
 
     @Test(expected = NotFoundException.class)
@@ -45,8 +45,8 @@ public class MealServiceTest {
 
     @Test
     public void delete() throws Exception {
-        service.delete(USERS_MEAL_ID, USER_ID);
-        assertMatch(service.getAll(USER_ID), meal4, meal3, meal2);
+        service.delete(USERS_MEAL_1_ID, USER_ID);
+        assertMatch(service.getAll(USER_ID), MEAL_4, MEAL_3, MEAL_2);
     }
 
     @Test(expected = NotFoundException.class)
@@ -58,26 +58,26 @@ public class MealServiceTest {
     public void getBetweenDateTimes() throws Exception {
         List<Meal> meals = service.getBetweenDateTimes(LocalDateTime.of(2015, Month.MAY, 1, 10, 0),
                 LocalDateTime.of(2015, Month.MAY, 1, 20, 0), USER_ID);
-        assertMatch(meals, meal3, meal2, meal1);
+        assertMatch(meals, MEAL_3, MEAL_2, MEAL_1);
     }
 
     @Test
     public void getAll() throws Exception {
         List<Meal> meals = service.getAll(USER_ID);
-        assertMatch(meals, meal4, meal3, meal2, meal1);
+        assertMatch(meals, MEAL_4, MEAL_3, MEAL_2, MEAL_1);
     }
 
     @Test
     public void update() throws Exception {
-        Meal updated = new Meal(meal1);
+        Meal updated = new Meal(MEAL_1);
         updated.setCalories(1000);
         service.update(updated, USER_ID);
-        assertMatch(service.get(meal1.getId(), USER_ID), updated);
+        assertMatch(service.get(MEAL_1.getId(), USER_ID), updated);
     }
 
     @Test(expected = NotFoundException.class)
     public void notFoundUpdate() throws Exception {
-        Meal updated = new Meal(notUsersMeal);
+        Meal updated = new Meal(NOT_USERS_MEAL);
         updated.setCalories(1000);
         service.update(updated, USER_ID);
     }
@@ -87,7 +87,7 @@ public class MealServiceTest {
         Meal newMeal = new Meal(LocalDateTime.now(), "ужин", 600);
         Meal createdMeal = service.create(newMeal, USER_ID);
         newMeal.setId(createdMeal.getId());
-        assertMatch(service.getAll(USER_ID), newMeal, meal4, meal3, meal2, meal1);
+        assertMatch(service.getAll(USER_ID), newMeal, MEAL_4, MEAL_3, MEAL_2, MEAL_1);
     }
 
 }
