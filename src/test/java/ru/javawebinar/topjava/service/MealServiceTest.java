@@ -48,9 +48,9 @@ public class MealServiceTest {
         @Override
         protected void finished(long nanos, Description description) {
             String testName = description.getMethodName();
-            long testTime = TimeUnit.NANOSECONDS.toMicros(nanos);
+            long testTime = TimeUnit.NANOSECONDS.toMillis(nanos);
             testsTimeMap.put(testName, testTime);
-            log.info(String.format("Test %s, spent %d microseconds",
+            log.info(String.format("Test %s, spent %d milliseconds",
                     testName, testTime));
         }
     };
@@ -123,6 +123,10 @@ public class MealServiceTest {
 
     @AfterClass
     public static void afterClass() throws Exception {
-        testsTimeMap.forEach((s, l) -> log.info(String.format("Test %s - %d microseconds", s, l)));
+        log.info("         ============================================");
+        log.info(String.format("%11s %13s %6s %14s %5s", "||", "Test name", "|", "Spent time", "||"));
+        log.info("         --------------------------------------------");
+        testsTimeMap.forEach((s, l) -> log.info(String.format("|| %-18s | %4d milliseconds ||", s, l)));
+        log.info("         ============================================");
     }
 }
