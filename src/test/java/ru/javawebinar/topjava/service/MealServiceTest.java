@@ -28,7 +28,7 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
-public class MealServiceTest extends AbstractServiceTest {
+public abstract class MealServiceTest extends AbstractServiceTest {
     private static final Logger log = getLogger("result");
 
     private static StringBuilder results = new StringBuilder();
