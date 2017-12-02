@@ -16,12 +16,10 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
-    @Modifying
     @Query("SELECT m FROM Meal m WHERE m.user.id=:userId")
     List<Meal> findAll(Sort sort, @Param("userId") int userId);
 
     @SuppressWarnings("JpaQlInspection")
-    @Modifying
     @Query("SELECT m FROM Meal m WHERE m.user.id=:userId AND m.dateTime BETWEEN :startDate AND :endDate")
     List<Meal> getBetween(Sort sort, @Param("startDate") LocalDateTime startDate,
                           @Param("endDate") LocalDateTime endDate, @Param("userId") int userId);

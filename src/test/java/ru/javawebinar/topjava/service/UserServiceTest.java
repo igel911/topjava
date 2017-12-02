@@ -22,14 +22,14 @@ import java.util.List;
 
 import static ru.javawebinar.topjava.UserTestData.*;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@RunWith(SpringRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles(resolver = ActiveDbProfileResolver.class)
-public class UserServiceTest {
+//@ContextConfiguration({
+//        "classpath:spring/spring-app.xml",
+//        "classpath:spring/spring-db.xml"
+//})
+//@RunWith(SpringRunner.class)
+//@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+//@ActiveProfiles(resolver = ActiveDbProfileResolver.class)
+public class UserServiceTest extends AbstractServiceTest {
 
     static {
         // Only for postgres driver logging
@@ -47,7 +47,7 @@ public class UserServiceTest {
     public void setUp() throws Exception {
         cacheManager.getCache("users").clear();
     }
-        
+
     @Test
     public void create() throws Exception {
         User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false, Collections.singleton(Role.ROLE_USER));
@@ -61,25 +61,27 @@ public class UserServiceTest {
         service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", Role.ROLE_USER));
     }
 
-    @Test
+    @Override
     public void delete() throws Exception {
         service.delete(USER_ID);
         assertMatch(service.getAll(), ADMIN);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Override
     public void notFoundDelete() throws Exception {
+        thrown.expect(NotFoundException.class);
         service.delete(1);
     }
 
-    @Test
+    @Override
     public void get() throws Exception {
         User user = service.get(USER_ID);
         assertMatch(user, USER);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Override
     public void getNotFound() throws Exception {
+        thrown.expect(NotFoundException.class);
         service.get(1);
     }
 
@@ -89,7 +91,7 @@ public class UserServiceTest {
         assertMatch(user, USER);
     }
 
-    @Test
+    @Override
     public void update() throws Exception {
         User updated = new User(USER);
         updated.setName("UpdatedName");
@@ -98,7 +100,7 @@ public class UserServiceTest {
         assertMatch(service.get(USER_ID), updated);
     }
 
-    @Test
+    @Override
     public void getAll() throws Exception {
         List<User> all = service.getAll();
         assertMatch(all, ADMIN, USER);
