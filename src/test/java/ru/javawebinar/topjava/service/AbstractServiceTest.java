@@ -31,7 +31,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 public abstract class AbstractServiceTest {
 
-    static final Logger log = getLogger("result");
+    private static final Logger log = getLogger("result");
 
     private static StringBuilder results = new StringBuilder();
 

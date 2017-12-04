@@ -14,10 +14,12 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface CrudUserRepository extends JpaRepository<User, Integer> {
     @Transactional
-    @Modifying
+//    @Modifying
 //    @Query(name = User.DELETE)
-    @Query("DELETE FROM User u WHERE u.id=:id")
-    int delete(@Param("id") int id);
+//    @Query("DELETE FROM User u WHERE u.id=:id")
+//    int delete(@Param("id") int id);
+
+    int deleteUserById(int id);
 
     @Override
     @Transactional
@@ -30,4 +32,9 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
     List<User> findAll(Sort sort);
 
     User getByEmail(String email);
+
+    @Transactional
+    //@Modifying
+    @Query("SELECT u FROM User u INNER JOIN FETCH u.meals WHERE u.id=:id")
+    User findUserByIdWithMeals(@Param("id") int id);
 }

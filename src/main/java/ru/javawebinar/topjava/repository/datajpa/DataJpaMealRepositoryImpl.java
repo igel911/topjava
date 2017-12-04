@@ -13,8 +13,6 @@ import java.util.List;
 @Repository
 public class DataJpaMealRepositoryImpl implements MealRepository {
 
-    private static final Sort SORT_DATE_TIME = new Sort(Sort.Direction.DESC, "dateTime");
-
     @Autowired
     private CrudMealRepository crudRepository;
 
@@ -32,22 +30,26 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
-        return crudRepository.delete(id, userId) != 0;
+        return crudRepository.deleteMealByIdAndUserId(id, userId) != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = crudRepository.findById(id).orElse(null);
-        return meal != null && meal.getUser().getId() == userId ? meal : null;
+        return crudRepository.findByIdAndUserId(id, userId).orElse(null);
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return crudRepository.findAll(SORT_DATE_TIME, userId);
+        return crudRepository.findAllByUserIdOrderByDateTimeDesc(userId);
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return crudRepository.getBetween(SORT_DATE_TIME, startDate, endDate, userId);
+        return crudRepository.findAllByUserIdAndDateTimeBetweenOrderByDateTimeDesc(userId, startDate, endDate);
+    }
+
+    @Override
+    public Meal getWithUser(int id, int userId) {
+        return crudRepository.findByIdWithUser(id, userId).orElse(null);
     }
 }
