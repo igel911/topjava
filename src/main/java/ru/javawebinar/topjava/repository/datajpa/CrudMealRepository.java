@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     @Override
-    @Transactional
+    @SuppressWarnings("unchecked")
     Meal save(Meal meal);
 
     @Transactional
@@ -26,7 +26,6 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     List<Meal> findAllByUserIdAndDateTimeBetweenOrderByDateTimeDesc(int userId, LocalDateTime startDate, LocalDateTime endDate);
 
-    @Transactional
     @Query("SELECT m FROM Meal m INNER JOIN FETCH m.user WHERE m.id=:id AND m.user.id=:userId")
     Optional<Meal> findByIdWithUser(@Param("id") int id, @Param("userId") int userId);
 }

@@ -25,7 +25,13 @@ public class SpringMain {
             appCtx.refresh();
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
-            adminUserController.create(new User(null, "userName", "email@com", "password", Role.ROLE_ADMIN));
+            User user = adminUserController.create(new User(null, "userName", "email@com", "password", Role.ROLE_ADMIN));
+            System.out.println();
+            UserService userService = appCtx.getBean(UserService.class);
+            user = userService.getWithMeals(user.getId());
+            System.out.println("new User = " + user);
+            System.out.println("Users meals size = " + user.getMeals().size());
+            user.getMeals().forEach(System.out::println);
             System.out.println();
             MealService mealService = appCtx.getBean(MealService.class);
             Meal meal = mealService.getWithUser(100002, 100000);

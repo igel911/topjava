@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
+//@Repository
 @Profile(Profiles.POSTGRES_DB)
 public class JdbcPostgresMealRepositoryImpl extends JdbcMealRepositoryImpl {
 
@@ -24,7 +24,7 @@ public class JdbcPostgresMealRepositoryImpl extends JdbcMealRepositoryImpl {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        map = new MapSqlParameterSource()
+        MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())

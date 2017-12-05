@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
+//@Repository
 @Profile(Profiles.HSQL_DB)
 public class JdbcHSQLDBMealRepositoryImpl extends JdbcMealRepositoryImpl {
 
@@ -23,7 +23,7 @@ public class JdbcHSQLDBMealRepositoryImpl extends JdbcMealRepositoryImpl {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        map = new MapSqlParameterSource()
+        MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
@@ -38,6 +38,4 @@ public class JdbcHSQLDBMealRepositoryImpl extends JdbcMealRepositoryImpl {
                 "SELECT * FROM meals WHERE user_id=?  AND date_time BETWEEN  ? AND ? ORDER BY date_time DESC",
                 ROW_MAPPER, userId, Timestamp.valueOf(startDate), Timestamp.valueOf(endDate));
     }
-
-
 }

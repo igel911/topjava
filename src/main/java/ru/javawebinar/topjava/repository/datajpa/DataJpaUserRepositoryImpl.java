@@ -40,9 +40,7 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
 
     @Override
     public User getWithMeals(int id) {
-        User user = crudRepository.findUserByIdWithMeals(id);
-        if (user.getMeals() == null) user.setMeals(Collections.emptyList());
-        return user;
+        return crudRepository.findUserByIdWithMeals(id);
     }
 
     @Override
