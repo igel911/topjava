@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava;
 
 import org.springframework.context.support.GenericXmlApplicationContext;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.MealWithExceed;
@@ -8,8 +9,10 @@ import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,11 +30,13 @@ public class SpringMain {
             System.out.println();
 
             MealRestController mealController = appCtx.getBean(MealRestController.class);
-            List<MealWithExceed> filteredMealsWithExceeded =
-                    mealController.getBetween(
-                            LocalDate.of(2015, Month.MAY, 30), LocalTime.of(7, 0),
-                            LocalDate.of(2015, Month.MAY, 31), LocalTime.of(11, 0));
-            filteredMealsWithExceeded.forEach(System.out::println);
+            mealController.create(new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
+            mealController.getAll().forEach(System.out::println);
+//            List<MealWithExceed> filteredMealsWithExceeded =
+//                    mealController.getBetween(
+//                            LocalDate.of(2015, Month.MAY, 30), LocalTime.of(7, 0),
+//                            LocalDate.of(2015, Month.MAY, 31), LocalTime.of(11, 0));
+//            filteredMealsWithExceeded.forEach(System.out::println);
         }
     }
 }

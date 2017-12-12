@@ -46,15 +46,15 @@ public class MealServlet extends HttpServlet {
             } else {
                 mealController.update(meal, getId(request));
             }
-            response.sendRedirect("meals");
+            response.sendRedirect("getAll");
 
         } else if ("filter".equals(action)) {
             LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
             LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
             LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
             LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
-            request.setAttribute("meals", mealController.getBetween(startDate, startTime, endDate, endTime));
-            request.getRequestDispatcher("/meals.jsp").forward(request, response);
+            request.setAttribute("getAll", mealController.getBetween(startDate, startTime, endDate, endTime));
+            request.getRequestDispatcher("/getAll.jsp").forward(request, response);
         }
     }
 
@@ -66,7 +66,7 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = getId(request);
                 mealController.delete(id);
-                response.sendRedirect("meals");
+                response.sendRedirect("getAll");
                 break;
             case "create":
             case "update":
@@ -78,8 +78,8 @@ public class MealServlet extends HttpServlet {
                 break;
             case "all":
             default:
-                request.setAttribute("meals", mealController.getAll());
-                request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                request.setAttribute("getAll", mealController.getAll());
+                request.getRequestDispatcher("/getAll.jsp").forward(request, response);
                 break;
         }
     }
