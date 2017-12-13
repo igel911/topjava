@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Role;
@@ -56,7 +55,12 @@ public class JdbcUserRepositoryImpl implements UserRepository {
             }
             jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", user.getId());
         }
-        user.getRoles().forEach(role -> jdbcTemplate.update("INSERT INTO user_roles VALUES (?,?)", user.getId(), role.name()));
+        //user.getRoles().forEach(role -> jdbcTemplate.update("INSERT INTO user_roles VALUES (?,?)", user.getId(), role.name()));
+        String[] queries = user.getRoles()
+                .stream()
+                .map(role -> String.format("INSERT INTO user_roles VALUES (%s,'%s')", user.getId(), role.name()))
+                .toArray(String[]:: new);
+        jdbcTemplate.batchUpdate(queries);
         return user;
     }
 
@@ -81,9 +85,12 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     public User getByEmail(String email) {
 //        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
-        User user = DataAccessUtils.singleResult(users);
-        user.setRoles(getRoles(user.getId()));
-        return user;
+        if (!users.isEmpty()){
+            User user = DataAccessUtils.singleResult(users);
+            user.setRoles(getRoles(user.getId()));
+            return user;
+        }
+        return null;
     }
 
     @Override
