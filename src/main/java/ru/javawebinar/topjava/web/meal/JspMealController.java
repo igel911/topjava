@@ -18,7 +18,7 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
-public class MealController extends AbstractMealController {
+public class JspMealController extends AbstractMealController {
 
     @GetMapping("/meals")
     public String meals(Model model) {
@@ -35,7 +35,7 @@ public class MealController extends AbstractMealController {
 
     @GetMapping("/update_meal")
     public String updateMeal(Model model, HttpServletRequest request) {
-        model.addAttribute("meal", service.get(getId(request), AuthorizedUser.id()));
+        model.addAttribute("meal", super.get(getId(request)));
         return "mealForm";
     }
 

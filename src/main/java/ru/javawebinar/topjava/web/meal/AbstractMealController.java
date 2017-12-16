@@ -70,4 +70,10 @@ public abstract class AbstractMealController {
         log.info("update {} for user {}", meal, userId);
         service.update(meal, userId);
     }
+
+    public Meal get(int id) {
+        int userId = AuthorizedUser.id();
+        log.info("get meal {} for user {}", id, userId);
+        return service.get(id, userId);
+    }
 }
