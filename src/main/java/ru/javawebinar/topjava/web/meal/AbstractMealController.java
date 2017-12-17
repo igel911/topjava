@@ -19,7 +19,7 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 public abstract class AbstractMealController {
 
-    static final Logger log = LoggerFactory.getLogger(AbstractMealController.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractMealController.class);
 
     @Autowired
     protected MealService service;
