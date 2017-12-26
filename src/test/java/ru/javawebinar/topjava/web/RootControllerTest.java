@@ -42,6 +42,7 @@ public class RootControllerTest extends AbstractControllerTest {
                             hasProperty("description", is("Завтрак")),
                             hasProperty("calories", is(500))
                     )
-                )));
+                )))
+                ;
     }
 }

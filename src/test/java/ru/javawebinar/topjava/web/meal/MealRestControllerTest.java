@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.web.meal;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
@@ -19,13 +21,16 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = MealRestController.REST_URL + '/';
 
+    @Autowired
+    private MealService mealService;
+
     @Test
     public void testGet() throws Exception {
         mockMvc.perform(get(REST_URL + MEAL1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEAL1));
+                .andExpect(TestUtil.contentJson(MEAL1));
     }
 
     @Test
@@ -42,7 +47,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1));
+                .andExpect(TestUtil.contentJson(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1));
     }
 
     @Test
@@ -71,6 +76,6 @@ public class MealRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL + "filter?startDate=2015-05-30T10:00:00&endDate=2015-05-30T20:00:00"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEAL3, MEAL2, MEAL1));
+                .andExpect(TestUtil.contentJson(MEAL3, MEAL2, MEAL1));
     }
 }
