@@ -46,3 +46,16 @@ function updateTable() {
         datatableApi.clear().rows.add(data).draw();
     });
 }
+
+function changeStatus(checkbox, id) {
+    var status = checkbox.is(':checked');
+    $.ajax({
+        url: ajaxUrl + id,
+        type: "POST",
+        data: "status=" + status,
+        success: function () {
+            updateTable();
+            successNoty("Status Changed");
+        }
+    });
+}
