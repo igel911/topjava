@@ -9,6 +9,13 @@ function makeEditable() {
         return false;
     });
 
+    // $("#filterForm").submit(function () {
+    //     updateTable();
+    //     return false;
+    // });
+    //
+    // $('#dateTime').datetimepicker();
+
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
     });
@@ -33,11 +40,11 @@ function deleteRow(id) {
     });
 }
 
-function updateTable() {
-    $.get(ajaxUrl, function (data) {
-        datatableApi.clear().rows.add(data).draw();
-    });
-}
+// function updateTable() {
+//     $.get(ajaxUrl, function (data) {
+//         datatableApi.clear().rows.add(data).draw();
+//     });
+// }
 
 function save() {
     var form = $("#detailsForm");
@@ -52,6 +59,29 @@ function save() {
         }
     });
 }
+
+// function updateTable() {
+//     var form = $("#filterForm");
+//     $.ajax({
+//         type: "POST",
+//        url: ajaxUrl + "updateTable",
+//        data: form.serialize(),
+//        success: function (result) {
+//            //updateTable();
+//            fillTable(result);
+//            successNoty("Filtered");
+//        }
+//     });
+// }
+//
+// function fillTable(data) {
+//     datatableApi.clear().rows.add(data).draw();
+// }
+//
+// function clearFilters() {
+//     $("#filterForm")[0].reset();
+//     updateTable();
+// }
 
 var failedNote;
 

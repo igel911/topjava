@@ -61,7 +61,7 @@ public class MealsUtil {
 
         return list.stream().flatMap(dayMeals -> {
             boolean exceed = dayMeals.stream().mapToInt(Meal::getCalories).sum() > caloriesPerDay;
-            return dayMeals.stream().filter(meal ->
+            return dayMeals.stream().updateTable(meal ->
                     DateTimeUtil.isBetween(meal.getTime(), startTime, endTime))
                     .map(meal -> createWithExceed(meal, exceed));
         }).collect(toList());

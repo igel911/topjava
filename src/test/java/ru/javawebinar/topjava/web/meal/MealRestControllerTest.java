@@ -82,7 +82,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFilter() throws Exception {
-        mockMvc.perform(get(REST_URL + "filter")
+        mockMvc.perform(get(REST_URL + "updateTable")
                 .param("startDate", "2015-05-30").param("startTime", "07:00")
                 .param("endDate", "2015-05-31").param("endTime", "11:00"))
                 .andExpect(status().isOk())
@@ -94,7 +94,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     public void testFilterAll() throws Exception {
-        mockMvc.perform(get(REST_URL + "filter?startDate=&endTime="))
+        mockMvc.perform(get(REST_URL + "updateTable?startDate=&endTime="))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(contentJson(MealsUtil.getWithExceeded(Arrays.asList(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1), USER.getCaloriesPerDay())));

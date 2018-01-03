@@ -6,7 +6,7 @@
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <link rel="stylesheet" type="text/css" href="webjars/datetimepicker/2.5.11/build/jquery.datetimepicker.min.css"/>
-<script type="text/javascript" src="webjars/datetimepicker/2.5.11/build/jquery.datetimepicker.full.min.js"></script>
+<script type="text/javascript" src="webjars/datetimepicker/2.5.11/build/jquery.datetimepicker.full.min.js" defer></script>
 
 <script type="text/javascript" src="resources/js/datatablesUtil.js" defer></script>
 <script type="text/javascript" src="resources/js/mealDatatables.js" defer></script>
@@ -17,7 +17,8 @@
         <section>
             <h3><spring:message code="meal.title"/></h3>
 
-            <form method="post" action="meals/filter">
+            <%--<form method="post" action="meals/updateTable">--%>
+            <form id="filterForm">
                 <dl>
                     <dt><spring:message code="meal.startDate"/>:</dt>
                     <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
@@ -37,6 +38,10 @@
                 <button type="submit" class="btn btn-primary">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     <spring:message code="meal.filter"/>
+                </button>
+                <button class="btn btn-danger" onclick="clearFilters()">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    <spring:message code="meal.clean"/>
                 </button>
             </form>
             <hr>
@@ -82,12 +87,10 @@
                     <input type="hidden" id="id" name="id">
 
                     <div class="form-group">
-                        <label for="datetime" class="control-label col-xs-3"><spring:message code="meal.dateTime"/></label>
+                        <label for="dateTime" class="control-label col-xs-3"><spring:message code="meal.dateTime"/></label>
 
                         <div class="col-xs-9">
-                            <%--<input type="datetime-local" class="form-control" id="dateTime" name="dateTime" placeholder="<spring:message code="meal.dateTime"/>">--%>
-                                <input type="text" class="form-control" id="datetime" name="dateTime" placeholder="<spring:message code="meal.dateTime"/>">
-                                <script>$('#datetime').datetimepicker();</script>
+                            <input type="text" class="form-control" id="dateTime" name="dateTime" placeholder="<spring:message code="meal.dateTime"/>">
                         </div>
                     </div>
 
