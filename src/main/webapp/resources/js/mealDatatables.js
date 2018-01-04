@@ -59,5 +59,5 @@ function fillTable(data) {
 
 function clearFilters() {
     $("#filterForm")[0].reset();
-    updateTable();
+    $.get(ajaxUrl, fillTable);
 }
