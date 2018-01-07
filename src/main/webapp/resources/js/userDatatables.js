@@ -54,7 +54,7 @@ function changeStatus(checkbox, id) {
         type: "POST",
         data: "status=" + status,
         success: function () {
-            checkbox.closest('tr').toggleClass('disabled');
+            status ? checkbox.closest('tr').removeClass('disabled') : checkbox.closest('tr').addClass('disabled');
             successNoty("Status Changed");
         }
     });
