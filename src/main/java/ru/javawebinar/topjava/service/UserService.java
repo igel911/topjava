@@ -22,5 +22,5 @@ public interface UserService {
 
     User getWithMeals(int id);
 
-    void changeStatus(int id, String status);
+    void changeStatus(int id, boolean status);
 }

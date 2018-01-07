@@ -49,7 +49,7 @@ public abstract class AbstractUserController {
         return service.getByEmail(email);
     }
 
-    public void changeStatus(int id, String status) {
+    public void changeStatus(int id, boolean status) {
         log.info("change status on {} for User with id={} ", status, id);
         service.changeStatus(id, status);
     }
