@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.to;
 
 import org.hibernate.validator.constraints.Range;
-import ru.javawebinar.topjava.model.Meal;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,17 +15,17 @@ public class MealWithExceed extends BaseTo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dateTime;
 
     @NotBlank
-    @Size(min = 2, max = 120)
+    @Size(min = 2, max = 120, message = "length must between 2 and 120 characters")
     private String description;
 
     @NotNull
     @Range(min = 10, max = 5000)
     private int calories;
 
-    //@NotNull
     private boolean exceed;
 
     public MealWithExceed() {

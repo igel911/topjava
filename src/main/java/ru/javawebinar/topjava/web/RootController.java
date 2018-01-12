@@ -46,6 +46,9 @@ public class RootController {
         result.getFieldErrors().forEach(
                 fe -> {
                     String msg = fe.getDefaultMessage();
+                    if (msg.contains("NumberFormatException: For input string: \"\"")) {
+                        msg = "field cannot be empty";
+                    }
                     if (!msg.startsWith(fe.getField())) {
                         msg = fe.getField() + ' ' + msg;
                     }

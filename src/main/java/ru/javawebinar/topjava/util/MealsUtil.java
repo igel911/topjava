@@ -39,9 +39,6 @@ public class MealsUtil {
     }
 
     public static Meal createNewFromTo(MealWithExceed newMeal) {
-
-        newMeal.setDateTime(LocalDateTime.now());
-
         return new Meal(newMeal.getDateTime(), newMeal.getDescription(), newMeal.getCalories());
     }
 
@@ -50,9 +47,6 @@ public class MealsUtil {
     }
 
     public static Meal updateFromTo(Meal meal, MealWithExceed mealWithExceed) {
-
-        mealWithExceed.setDateTime(LocalDateTime.now());
-
         meal.setDateTime(mealWithExceed.getDateTime());
         meal.setDescription(mealWithExceed.getDescription());
         meal.setCalories(mealWithExceed.getCalories());
