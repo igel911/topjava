@@ -41,10 +41,13 @@ function updateTableByData(data) {
 }
 
 function save() {
+    var myForm = form.serialize().replace("%20", "T");
+
+    debugger;
     $.ajax({
         type: "POST",
         url: ajaxUrl,
-        data: form.serialize()
+        data: myForm
     }).done(function () {
         $("#editRow").modal("hide");
         updateTable();
