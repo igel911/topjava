@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDateTime;
@@ -51,9 +51,9 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public void update(MealWithExceed mealWithExceed, int userId) {
-        Meal meal = get(mealWithExceed.getId(), userId);
-        repository.save(MealsUtil.updateFromTo(meal, mealWithExceed), userId);
+    public void update(MealTo mealTo, int userId) {
+        Meal meal = get(mealTo.getId(), userId);
+        repository.save(MealsUtil.updateFromTo(meal, mealTo), userId);
     }
 
     @Override
