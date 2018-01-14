@@ -41,8 +41,10 @@ function updateTableByData(data) {
 }
 
 function save() {
-    var myForm = form.serialize().replace("%20", "T");
-
+    var myForm = form.serialize();
+    if (myForm.indexOf("dateTime") !== -1) {
+        myForm = myForm.replace("%20", "T");
+    }
     debugger;
     $.ajax({
         type: "POST",
