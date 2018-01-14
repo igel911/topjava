@@ -1,12 +1,7 @@
 package ru.javawebinar.topjava.web;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.StringJoiner;
 
 @Controller
 public class RootController {
@@ -29,21 +24,5 @@ public class RootController {
     @GetMapping("/meals")
     public String meals() {
         return "meals";
-    }
-
-    public static ResponseEntity<String> getErrors(BindingResult result) {
-        StringJoiner joiner = new StringJoiner("<br>");
-        result.getFieldErrors().forEach(
-                fe -> {
-                    String msg = fe.getDefaultMessage();
-                    if (msg.contains("NumberFormatException: For input string: \"\"")) {
-                        msg = "field cannot be empty";
-                    }
-                    if (!msg.startsWith(fe.getField())) {
-                        msg = fe.getField() + ' ' + msg;
-                    }
-                    joiner.add(msg);
-                });
-        return new ResponseEntity<>(joiner.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
