@@ -6,6 +6,9 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +19,7 @@ import ru.javawebinar.topjava.util.exception.ErrorType;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.StringJoiner;
 
 @RestControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
@@ -35,10 +39,31 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true, ErrorType.DATA_ERROR);
     }
 
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(BindException.class)
+    public ErrorInfo bindingValidationError(HttpServletRequest req, BindException e) {
+        return logAndGetErrorInfo(req, e, ErrorType.DATA_ERROR);
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorInfo handleError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, true, ErrorType.APP_ERROR);
+    }
+
+    private ErrorInfo logAndGetErrorInfo(HttpServletRequest req, BindException e,  ErrorType errorType) {
+        BindingResult result = e.getBindingResult();
+        StringJoiner joiner = new StringJoiner("<br>");
+        result.getFieldErrors().forEach(
+                fe -> {
+                    String msg = fe.getDefaultMessage();
+                    if (!msg.startsWith(fe.getField())) {
+                        msg = fe.getField() + ' ' + msg;
+                    }
+                    joiner.add(msg);
+                });
+        log.warn("{} at request  {}: {}",errorType, req.getRequestURL(), joiner.toString());
+        return new ErrorInfo(req.getRequestURL(), errorType, joiner.toString());
     }
 
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {

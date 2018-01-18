@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web.meal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
@@ -37,17 +38,15 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createOrUpdate(@Valid Meal meal, BindingResult result) {
+    public void createOrUpdate(@Valid Meal meal, BindingResult result) throws BindException {
         if (result.hasErrors()) {
-            // TODO change to exception handler
-            return ValidationUtil.getErrorResponse(result);
+            throw new BindException(result);
         }
         if (meal.isNew()) {
             super.create(meal);
         } else {
             super.update(meal, meal.getId());
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
