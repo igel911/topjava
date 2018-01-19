@@ -41,8 +41,14 @@ public class ExceptionInfoHandler {
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(BindException.class)
-    public ErrorInfo bindingValidationError(HttpServletRequest req, BindException e) {
-        return logAndGetErrorInfo(req, e, ErrorType.DATA_ERROR);
+    public ErrorInfo bindingError(HttpServletRequest req, BindException e) {
+        return logAndGetErrorInfo(req, e.getBindingResult(), ErrorType.DATA_ERROR);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ErrorInfo restValidationError(HttpServletRequest req, MethodArgumentNotValidException e) {
+        return logAndGetErrorInfo(req, e.getBindingResult(), ErrorType.DATA_ERROR);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -51,8 +57,7 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true, ErrorType.APP_ERROR);
     }
 
-    private ErrorInfo logAndGetErrorInfo(HttpServletRequest req, BindException e,  ErrorType errorType) {
-        BindingResult result = e.getBindingResult();
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, BindingResult result,  ErrorType errorType) {
         StringJoiner joiner = new StringJoiner("<br>");
         result.getFieldErrors().forEach(
                 fe -> {
