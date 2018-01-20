@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -38,10 +39,14 @@ public class AdminAjaxController extends AbstractUserController {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        if (userTo.isNew()) {
-            super.create(UserUtil.createNewFromTo(userTo));
-        } else {
-            super.update(userTo, userTo.getId());
+        try {
+            if (userTo.isNew()) {
+                super.create(UserUtil.createNewFromTo(userTo));
+            } else {
+                super.update(userTo, userTo.getId());
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("User with this email already exists");
         }
     }
 

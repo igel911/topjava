@@ -57,6 +57,16 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true, ErrorType.APP_ERROR);
     }
 
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
+        Throwable rootCause = ValidationUtil.getRootCause(e);
+        if (logException) {
+            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
+        } else {
+            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
+        }
+        return new ErrorInfo(req.getRequestURL(), errorType, rootCause.getMessage());
+    }
+
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, BindingResult result,  ErrorType errorType) {
         StringJoiner joiner = new StringJoiner("<br>");
         result.getFieldErrors().forEach(
@@ -69,15 +79,5 @@ public class ExceptionInfoHandler {
                 });
         log.warn("{} at request  {}: {}",errorType, req.getRequestURL(), joiner.toString());
         return new ErrorInfo(req.getRequestURL(), errorType, joiner.toString());
-    }
-
-    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
-        Throwable rootCause = ValidationUtil.getRootCause(e);
-        if (logException) {
-            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
-        } else {
-            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
-        }
-        return new ErrorInfo(req.getRequestURL(), errorType, rootCause.toString());
     }
 }
