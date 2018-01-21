@@ -1,11 +1,13 @@
 package ru.javawebinar.topjava.web;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,15 +42,19 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(BindException.class)
-    public ErrorInfo bindingError(HttpServletRequest req, BindException e) {
-        return logAndGetErrorInfo(req, e.getBindingResult(), ErrorType.DATA_ERROR);
+    @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
+    public ErrorInfo bindingError(HttpServletRequest req, Exception e) {
+        if (BindingResult.class.isAssignableFrom(e.getClass())) {
+            return logAndGetErrorInfo(req, ((BindException)e).getBindingResult(), ErrorType.DATA_ERROR);
+        }
+        return logAndGetErrorInfo(req, ((MethodArgumentNotValidException)e).getBindingResult(), ErrorType.DATA_ERROR);
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorInfo restValidationError(HttpServletRequest req, MethodArgumentNotValidException e) {
-        return logAndGetErrorInfo(req, e.getBindingResult(), ErrorType.DATA_ERROR);
+    @ExceptionHandler(TransactionSystemException.class)
+    public ErrorInfo restValidationError(HttpServletRequest req, TransactionSystemException e) {
+
+        return logAndGetErrorInfo(req, e, true, ErrorType.DATA_ERROR);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

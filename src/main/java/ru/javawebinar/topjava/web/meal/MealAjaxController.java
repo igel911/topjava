@@ -1,11 +1,13 @@
 package ru.javawebinar.topjava.web.meal;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -35,9 +37,12 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public void createOrUpdate(@Valid Meal meal, BindingResult result) throws BindException {
-        if (result.hasErrors()) {
-            throw new BindException(result);
+    public void createOrUpdate(@Valid Meal meal, BindingResult result)  {
+//        if (result.hasErrors()) {
+//            throw new BindException(result);
+//        }
+        if (MealsUtil.checkDate(getAll(), meal).isPresent()) {
+            throw new DataIntegrityViolationException("у Вас уже есть еда с такой датой/временем");
         }
         if (meal.isNew()) {
             super.create(meal);
