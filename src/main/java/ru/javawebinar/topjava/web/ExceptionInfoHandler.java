@@ -41,7 +41,7 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true, ErrorType.DATA_ERROR);
     }
 
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)    //422
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
     public ErrorInfo bindingError(HttpServletRequest req, Exception e) {
         if (BindingResult.class.isAssignableFrom(e.getClass())) {
@@ -50,12 +50,11 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, ((MethodArgumentNotValidException)e).getBindingResult(), ErrorType.DATA_ERROR);
     }
 
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(TransactionSystemException.class)
-    public ErrorInfo restValidationError(HttpServletRequest req, TransactionSystemException e) {
-
-        return logAndGetErrorInfo(req, e, true, ErrorType.DATA_ERROR);
-    }
+//    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+//    @ExceptionHandler(TransactionSystemException.class)
+//    public ErrorInfo restValidationError(HttpServletRequest req, TransactionSystemException e) {
+//        return logAndGetErrorInfo(req, e, true, ErrorType.DATA_ERROR);
+//    }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
@@ -65,6 +64,16 @@ public class ExceptionInfoHandler {
 
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
+        String message = ValidationUtil.getRootCause(e).getMessage();
+        /*Validation failed for classes [ru.javawebinar.topjava.model.User] during persist time for groups [ru.javawebinar.topjava.View$Persist, ]
+            List of constraint violations:[
+	            ConstraintViolationImpl{interpolatedMessage='не может быть пусто', propertyPath=password, rootBeanClass=class ru.javawebinar.topjava.model.User, messageTemplate='{javax.validation.constraints.NotBlank.message}'}
+	            ConstraintViolationImpl{interpolatedMessage='размер должен быть между 2 и 100', propertyPath=name, rootBeanClass=class ru.javawebinar.topjava.model.User, messageTemplate='{javax.validation.constraints.Size.message}'}
+                ConstraintViolationImpl{interpolatedMessage='не может быть пусто', propertyPath=name, rootBeanClass=class ru.javawebinar.topjava.model.User, messageTemplate='{javax.validation.constraints.NotBlank.message}'}
+                ConstraintViolationImpl{interpolatedMessage='размер должен быть между 5 и 100', propertyPath=password, rootBeanClass=class ru.javawebinar.topjava.model.User, messageTemplate='{javax.validation.constraints.Size.message}'}
+                ConstraintViolationImpl{interpolatedMessage='не может быть пусто', propertyPath=email, rootBeanClass=class ru.javawebinar.topjava.model.User, messageTemplate='{javax.validation.constraints.NotBlank.message}'}
+            ] */
+
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
         } else {

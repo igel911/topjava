@@ -37,10 +37,10 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public void createOrUpdate(@Valid Meal meal, BindingResult result)  {
-//        if (result.hasErrors()) {
-//            throw new BindException(result);
-//        }
+    public void createOrUpdate(@Valid Meal meal, BindingResult result) throws BindException {
+        if (result.hasErrors()) {
+            throw new BindException(result);
+        }
         if (MealsUtil.checkDate(getAll(), meal).isPresent()) {
             throw new DataIntegrityViolationException("у Вас уже есть еда с такой датой/временем");
         }
